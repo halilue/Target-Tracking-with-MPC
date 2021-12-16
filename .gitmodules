@@ -1,0 +1,4 @@
+[submodule "rotors_simulator"]
+	path = rotors_simulator
+	url = https://github.com/halilue/rotors_simulator.git
+	branch = thesis

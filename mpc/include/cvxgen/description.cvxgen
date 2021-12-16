@@ -1,0 +1,34 @@
+# Produced by CVXGEN, 2021-06-20 16:41:19 -0400.
+# CVXGEN is Copyright (C) 2006-2017 Jacob Mattingley, jem@cvxgen.com.
+# The code in this file is Copyright (C) 2006-2017 Jacob Mattingley.
+# CVXGEN, or solvers produced by CVXGEN, cannot be used for commercial
+# applications without prior written permission from Jacob Mattingley.
+
+# Filename: description.cvxgen.
+# Description: A description of the CVXGEN problem.
+
+dimensions
+  m = 3   # Dimension of Input Vector
+  n = 6   # Dimension of State Vector
+  T = 20  # Prediction horizon
+end
+
+parameters
+  A (n,n) {1,1 1,2 2,2 3,3 3,4 4,4 5,5 5,6 6,6 } # Dynamics Matrix
+  B (n,m) {1,1 2,1 3,2 4,2 5,3 6,3}              # Transfer Matrix
+  Q  (n,n) diagonal psd                          # Weight Matrix for the state
+  P (n,n) diagonal psd                           # Weight Matrix for the final state
+  x[0] (n)                                       # Initial state
+  xD[t] (n) ,t=0..T+1                            # Desired state
+end
+
+variables
+  x[t] (n), t=1..T+1   # State vector
+  u[t] (m), t=0..T     # Input vector
+end
+
+minimize
+  sum[t=1..T](quad(x[t]-xD[t], Q)) + quad(x[T+1]-xD[T+1] ,P)  # Cost-Function
+subject to
+  x[t+1] == A*x[t] + B*u[t], t=0..T                           # State-Space representation
+end
